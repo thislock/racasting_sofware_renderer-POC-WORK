@@ -25,9 +25,9 @@ use keys::*;
 mod maths;
 use maths::*;
 
-extern crate rayon;
-
-use rayon::prelude;
+#[path="software_renderer/texture.rs"]
+mod texture;
+use texture::*;
 
 use sdl2::pixels::PixelFormat;
 
@@ -35,8 +35,11 @@ use std::ops::{Sub, Div};
 use std::thread;
 use std::time::{Duration, Instant};
 
-pub const WIDTH: u32 = 800;
-pub const HEIGHT: u32 = 600;
+pub const WIDTH: u32 = 300;
+pub const HEIGHT: u32 = 200;
+
+const WINDOW_WIDTH: u32 = 800;
+const WINDOW_HEIGHT: u32 = 640;
 
 const FPS: u32 = 30;
 const TITLE: &str = "Lochlans raycasting software renderer";
@@ -46,8 +49,9 @@ fn main() {
     let video_subsystem = sdl_context.video().unwrap();
 
     let window = video_subsystem
-        .window(TITLE, WIDTH, HEIGHT)
+        .window(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT)
         .position_centered()
+        .resizable()
         .build()
         .unwrap();
 
@@ -96,7 +100,7 @@ fn main() {
         
         master_rendertask(&mut buffer, &map1, &mut local_player);
 
-        println!("position: {:?}, rotation: {}", local_player.pos, local_player.rot);
+        //println!("position: {:?}, rotation: {}", local_player.pos, local_player.rot);
 
         // Update the texture with the buffer and draw it to the screen
         texture.update(None, &buffer, (WIDTH * 3) as usize).unwrap();

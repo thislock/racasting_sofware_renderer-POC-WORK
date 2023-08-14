@@ -18,8 +18,10 @@ pub type Color = [u8;3];
 
 pub type RenderChunks = Vec<(f32, ([i32;2], [u32;2]))>;
 
+use std::arch::asm;
+
 // Set the color of a pixel in the buffer
-pub fn set_pixel(buffer: &mut PixelBuffer, x: u32, y: u32, color: Color) {
+pub fn set_pixel(buffer: &mut PixelBuffer, x: u32, y: u32, color: &Color) {
 
   let offset = ((y * WIDTH + x) * 3) as usize;
 

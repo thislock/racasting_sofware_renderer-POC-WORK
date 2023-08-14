@@ -11,7 +11,6 @@ use player::*;
 
 use find_directional_line;
 
-const raycast_check_dst: f32 = 0.15;
 
 fn subtract_f32_array(sub1: &[f32;2], sub2: &[f32;2]) -> [f32;2] {
   [
@@ -20,6 +19,7 @@ fn subtract_f32_array(sub1: &[f32;2], sub2: &[f32;2]) -> [f32;2] {
   ]
 }
 
+const raycast_check_dst: f32 = 0.05;
 // casts a ray from the given position to the ending of the map, or an object, and returns the distance, and point to draw as an x pos of the fov, and gets the wall type
 pub fn cast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
   
@@ -32,7 +32,7 @@ pub fn cast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
   let mut distance_away = 0.0;
 
   // continues the calculations unlil it his a wall, or the end of the map
-  while !(map.get_map_item_from_pos([raycast_pos[0] as i32, raycast_pos[1] as i32]) > 1) {
+  while !map.is_pos_wall(&raycast_pos) {
     
     distance_away += raycast_check_dst;
 
@@ -75,9 +75,9 @@ pub fn raycast_walls(buffer: &mut PixelBuffer, map: &Map, player: &Player) {
 
   let mut current_dst = (0.0, 0);
 
-  // loops through each sector of pixels that the player fov owns, * 2 (for smoother walls)
-  for i in 0..player.fov*2 {
-    current_dst = cast_ray(map, player.pos, (player.rot + (i as f32 / 2.0)) - (player.fov/2) as f32);
+  // loops through each sector of pixels that the player fov owns
+  for i in 0..player.fov as i32 {
+    current_dst = cast_ray(map, player.pos, (player.rot + i as f32 - (player.fov/2.0) as f32));
     if current_dst.0 != -1.0 {
       distance_list.push((current_dst.0, i, current_dst.1));
     }
@@ -90,7 +90,7 @@ pub fn raycast_walls(buffer: &mut PixelBuffer, map: &Map, player: &Player) {
 fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, i32, u8)>, player: &Player) {
 
   // the amount of pixels each ray casted can take up
-  let draw_sector = (((WIDTH as f32) / player.fov as f32) / 2.0) as i32;
+  let draw_sector = ((WIDTH as f32) / player.fov as f32) as i32;
 
   let mut draw_range = [0;2];
 
@@ -114,27 +114,27 @@ fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, 
     }
 
     // does some meth to make the vertical part of the collum smaller on the screen the longer the raycast lasted
-    let mut collum_vertical_size = ((SCREEN_MIDDLE as f32 / 3.0) / i.0).round() as u32;
+    let mut collum_vertical_size = ((SCREEN_MIDDLE as f32) / i.0).round() as u32;
     if collum_vertical_size > SCREEN_MIDDLE {
       collum_vertical_size = SCREEN_MIDDLE
     }
 
-    for x in draw_range[0]..draw_range[1] {
+    for x in draw_range[0] as u32..draw_range[1] as u32 {
       
       // draw the vertical collums
       for y in SCREEN_MIDDLE..SCREEN_MIDDLE+collum_vertical_size {
         // bottom half
-        set_pixel(buffer, x as u32, y, color);
+        set_pixel(buffer, x, y, &color);
         // just inverts the bottom half
-        set_pixel(buffer, x as u32, y - collum_vertical_size, color);
+        set_pixel(buffer, x, y - collum_vertical_size, &color);
       }
       
       // draw the backround
       for y in SCREEN_MIDDLE+collum_vertical_size..HEIGHT {
         // bottom half
-        set_pixel(buffer, x as u32, y, BACKROUND_COLOR);
+        set_pixel(buffer, x, y, &BACKROUND_COLOR);
         // just inverts the bottom half
-        set_pixel(buffer, x as u32, y - collum_vertical_size - SCREEN_MIDDLE, BACKROUND_COLOR);
+        set_pixel(buffer, x, y - collum_vertical_size - SCREEN_MIDDLE, &BACKROUND_COLOR);
       }
   
     }

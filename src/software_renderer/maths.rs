@@ -1,8 +1,8 @@
 
 const PI: f32 = 3.141592653589793;
 
-const RADIAN_CALC_BASE:f32 = PI/180.0;
 // converts an angle to radians, used for directional line drawing
+const RADIAN_CALC_BASE: f32 = PI/180.0;
 fn to_radians(angle: f32) -> f32 {
   RADIAN_CALC_BASE * angle
 }

@@ -24,6 +24,18 @@ impl Map {
 
   }
 
+  pub fn is_pos_wall(&self, pos: &[f32;2]) -> bool {
+    
+    let map_pos = [pos[0] as i32, pos[1] as i32];
+
+    if self.get_map_item_from_pos([map_pos[0], map_pos[1]]) > 1 {
+      return true;
+    }
+
+    false
+
+  }
+
   pub fn is_pos_out_of_map(&self, pos_checked: [f32;2]) -> bool {
 
     if (pos_checked[0] as i32) < 1 

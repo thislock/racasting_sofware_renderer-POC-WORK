@@ -1,7 +1,7 @@
 
 use Map;
 
-const default_player_fov: i32 = 100;
+const default_player_fov: f32 = 100.0;
 
 pub const player_turn_vel: f32 = 2.5;
 
@@ -9,7 +9,7 @@ pub const PLAYER_VEL: f32 = 0.05;
 pub struct Player {
   pub pos: [f32;2],
   pub rot: f32,
-  pub fov: i32,
+  pub fov: f32,
 }
 
 pub fn init_Player() -> Player {
