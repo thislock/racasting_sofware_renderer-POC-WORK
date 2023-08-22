@@ -19,6 +19,11 @@ fn subtract_f32_array(sub1: &[f32;2], sub2: &[f32;2]) -> [f32;2] {
   ]
 }
 
+// TODO, make a less shit raycasting function
+fn fast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
+  
+}
+
 const raycast_check_dst: f32 = 0.05;
 // casts a ray from the given position to the ending of the map, or an object, and returns the distance, and point to draw as an x pos of the fov, and gets the wall type
 pub fn cast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
