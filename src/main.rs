@@ -38,7 +38,7 @@ use std::ops::{Sub, Div};
 use std::thread;
 use std::time::{Duration, Instant};
 
-pub const WIDTH: u32 = 300;
+pub const WIDTH: u32 = 350;
 pub const HEIGHT: u32 = 200;
 
 const WINDOW_WIDTH: u32 = 800;

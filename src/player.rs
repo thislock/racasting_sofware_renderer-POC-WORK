@@ -1,7 +1,7 @@
 
 use Map;
 
-const default_player_fov: f32 = 100.0;
+const default_player_fov: f32 = 70.0;
 
 pub const player_turn_vel: f32 = 2.5;
 
