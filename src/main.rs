@@ -29,6 +29,9 @@ use maths::*;
 mod texture;
 use texture::*;
 
+mod mouse;
+use mouse::*;
+
 use sdl2::pixels::PixelFormat;
 
 use std::ops::{Sub, Div};
@@ -41,7 +44,7 @@ pub const HEIGHT: u32 = 200;
 const WINDOW_WIDTH: u32 = 800;
 const WINDOW_HEIGHT: u32 = 640;
 
-const FPS: u32 = 30;
+const FPS: u32 = 60;
 const TITLE: &str = "Lochlans raycasting software renderer";
 
 fn main() {
@@ -56,6 +59,9 @@ fn main() {
         .unwrap();
 
     let mut canvas = window.into_canvas().build().unwrap();
+    
+    let mut player_mouse = PlayerMouse::new();
+    
     let texture_creator = canvas.texture_creator();
     let mut texture = texture_creator
         .create_texture_streaming(sdl2::pixels::PixelFormatEnum::RGB24, WIDTH, HEIGHT)
@@ -93,8 +99,9 @@ fn main() {
     while running {
 
         frame_start = Instant::now();
-
-        keyboard_events(&sdl_context, &mut running, &mut local_player, &map1);
+        
+        keyboard_events(&sdl_context, &mut running, &mut local_player, &map1, &mut player_mouse, &mut canvas);
+        operate_mouse_lock(&sdl_context, &mut canvas, &mut player_mouse, &mut local_player);
         
         // You can perform any rendering updates here by modifying the buffer.
         
