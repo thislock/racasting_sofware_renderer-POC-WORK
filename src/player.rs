@@ -48,7 +48,7 @@ pub fn init_player() -> Player {
 
 pub fn set_player_start_position(player: &mut Player, map: &Map) {
 
-  let player_default = map.map_layout.iter().position(|&i| i == 1).unwrap();
+  let player_default = map.map_layout.iter().position(|&i| i == '^' as u8).unwrap();
 
   let set_val = map.generate_map_pos_from_raw( player_default as i32);
 

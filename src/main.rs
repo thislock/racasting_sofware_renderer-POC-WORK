@@ -79,15 +79,14 @@ fn main() {
 
     // gameplay and graphics and such
     
-    let map1 = new_map(
-        vec![
-            0, 0, 3, 2, 3, 2, 3, 0,
-            0, 2, 0, 0, 0, 0, 0, 2,
-            0, 3, 1, 0, 0, 0, 0, 3,
-            0, 0, 2, 3, 2, 0, 0, 2,
-            0, 3, 0, 0, 0, 0, 0, 3,
-            0, 0, 2, 3, 2, 3, 2, 0
-        ],8,6
+    let map1 = map_from_txt(vec![], 
+        "
++++++++\n
++     +\n
++  ^  +\n
++     +\n
++++++++\n
+        "
     );
 
     let mut local_player = init_player();

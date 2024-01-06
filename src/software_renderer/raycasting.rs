@@ -111,19 +111,19 @@ pub fn raycast_walls(buffer: &mut PixelBuffer, map: &Map, player: &Player) {
 
   let mut current_dst = (0.0, 0);
 
-  // loops through each sector of pixels that the player fov owns
+  // loops through each sector of pixels that the player can see
   for i in 0..player.fov as i32 {
-    current_dst = cast_ray(map, player.pos, (player.rot + i as f32 - (player.fov/2.0) as f32));
+    current_dst = cast_ray(map, player.pos, player.rot + i as f32 - (player.fov/2.0) as f32);
     if current_dst.0 != -1.0 {
       distance_list.push((current_dst.0, i, current_dst.1));
     }
   }
 
-  draw_raycasted_walls(buffer, &mut distance_list, player);
+  draw_raycasted_walls(buffer, &mut distance_list, player, map);
 
 }
 
-fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, i32, u8)>, player: &Player) {
+fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, i32, u8)>, player: &Player, map: &Map) {
 
   // the amount of pixels each ray casted can take up
   let draw_sector = ((WIDTH as f32) / player.fov as f32) as i32;
@@ -142,9 +142,13 @@ fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, 
       (i.1 * draw_sector) + draw_sector
     ];
 
+    let plus = '+' as u8;
+
     match i.2 {
       2 => color = [255, 255, 255],
       3 => color = [255, 0, 0],
+
+      plus => color = [255, 255, 0],
 
       _ => color = [0, 0, 0]
     }
