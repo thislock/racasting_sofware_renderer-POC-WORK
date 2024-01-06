@@ -90,9 +90,11 @@ fn main() {
         ],8,6
     );
 
-    let mut local_player = init_Player();
+    let mut local_player = init_player();
 
     set_player_start_position(&mut local_player, &map1);
+
+    let mut key_list = build_keylist();
 
     // Main loop
     let mut running = true;
@@ -100,7 +102,7 @@ fn main() {
 
         frame_start = Instant::now();
         
-        keyboard_events(&sdl_context, &mut running, &mut local_player, &map1, &mut player_mouse, &mut canvas);
+        keyboard_events(&sdl_context, &mut running, &mut local_player, &map1, &mut player_mouse, &mut key_list);
         operate_mouse_lock(&sdl_context, &mut canvas, &mut player_mouse, &mut local_player);
         
         // You can perform any rendering updates here by modifying the buffer.

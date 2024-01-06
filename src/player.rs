@@ -5,18 +5,43 @@ const default_player_fov: f32 = 70.0;
 
 pub const player_turn_vel: f32 = 2.5;
 
-pub const PLAYER_VEL: f32 = 0.05;
+pub const PLAYER_TERMINAL_VEL: f32 = 0.06;
+pub const PLAYER_ACCELERATION: f32 = 0.003;
+
 pub struct Player {
   pub pos: [f32;2],
+  pub velocity: f32,
   pub rot: f32,
   pub fov: f32,
+
+  pub player_stopped_moving: bool,
 }
 
-pub fn init_Player() -> Player {
+impl Player {
+
+  pub fn operate_player_acceleration(&mut self) {
+
+    let slow_down_speed = PLAYER_ACCELERATION*3.0;
+
+    if self.player_stopped_moving && self.velocity >= 0.0 {
+      if self.velocity - slow_down_speed > 0.0 {
+        self.velocity -= slow_down_speed;
+      } else {
+        self.velocity = 0.0;
+      }
+    }
+
+  }
+
+}
+
+pub fn init_player() -> Player {
   Player {
     pos: [0.0, 0.0],
+    velocity: 0.0,
     rot: 0.0,
     fov: default_player_fov,
+    player_stopped_moving: false,
   }
 }
 
