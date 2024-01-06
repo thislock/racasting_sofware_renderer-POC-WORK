@@ -1,15 +1,13 @@
 
-use sdl2::{Sdl, event};
+use sdl2::Sdl;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
-use sdl2::render::Canvas;
 
 use find_directional_line;
 
 use Player;
 use Map;
 use player_turn_vel;
-use sdl2::video::Window;
 
 use crate::mouse::PlayerMouse;
 use crate::player::{PLAYER_TERMINAL_VEL, PLAYER_ACCELERATION};
@@ -47,14 +45,6 @@ impl KeySwitch {
     }
   }
 
-  pub fn comp_key(&self, key_compaired: Keycode) -> bool {
-    if self.key == key_compaired {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
 }
 
 fn player_move_in_direction(player: &mut Player, map: &Map, angle: f32) {
@@ -85,7 +75,11 @@ pub fn build_keylist() -> Vec<KeySwitch> {
 
 fn invert_rotation(a: f32) -> f32 {
 
-  let b = a - 180.0;
+  let mut b = a - 180.0;
+
+  if b < 0.0 {
+    b += 360.0;
+  }
 
   return b.abs()
 

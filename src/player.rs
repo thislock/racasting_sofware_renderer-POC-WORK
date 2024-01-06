@@ -6,7 +6,7 @@ const default_player_fov: f32 = 70.0;
 pub const player_turn_vel: f32 = 2.5;
 
 pub const PLAYER_TERMINAL_VEL: f32 = 0.06;
-pub const PLAYER_ACCELERATION: f32 = 0.003;
+pub const PLAYER_ACCELERATION: f32 = 0.002;
 
 pub struct Player {
   pub pos: [f32;2],
@@ -21,7 +21,7 @@ impl Player {
 
   pub fn operate_player_acceleration(&mut self) {
 
-    let slow_down_speed = PLAYER_ACCELERATION*3.0;
+    let slow_down_speed = PLAYER_ACCELERATION*5.0;
 
     if self.player_stopped_moving && self.velocity >= 0.0 {
       if self.velocity - slow_down_speed > 0.0 {
