@@ -7,7 +7,7 @@ use pixel_buffer::*;
 
 #[path="./software_renderer/raycasting.rs"]
 mod raycasting;
-use raycasting::*;
+
 
 #[path="./software_renderer/map.rs"]
 mod map;
@@ -27,13 +27,14 @@ use maths::*;
 
 #[path="software_renderer/texture.rs"]
 mod texture;
-use texture::*;
+
 
 mod mouse;
 use mouse::*;
 
-use sdl2::pixels::PixelFormat;
 
+
+use std::collections::HashMap;
 use std::ops::{Sub, Div};
 use std::thread;
 use std::time::{Duration, Instant};
@@ -78,14 +79,24 @@ fn main() {
     let mut sec_counter = Instant::now();
 
     // gameplay and graphics and such
-    
-    let map1 = map_from_txt(vec![], 
+
+    let mut colors = HashMap::new();
+
+    colors.insert('+', [255, 0, 0]);
+    colors.insert('=', [0, 0, 0]);
+
+    let map1 = map_from_txt(
+        colors, 
         "
-+++++++\n
-+     +\n
-+  ^  +\n
-+     +\n
-+++++++\n
+                    ++++
+                    +  +
+        +++++++     +  +
+        =     +++++++  ++++
+        ^                 =
+        =     +++++++  ++++++++++++
+        +++++++     +             +
+                    +             +
+                    +++++++++++++++
         "
     );
 

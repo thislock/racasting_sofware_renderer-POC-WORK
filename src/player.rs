@@ -48,8 +48,8 @@ pub fn init_player() -> Player {
 
 pub fn set_player_start_position(player: &mut Player, map: &Map) {
 
-  let player_default = map.map_layout.iter().position(|&i| i == '^' as u8).unwrap();
-
+  let player_default = map.map_layout.iter().position(|&i| i == '^' as u8).expect("no player marker placed in given map, please put the ^ symbol where the player spawns");
+  
   let set_val = map.generate_map_pos_from_raw( player_default as i32);
 
   let converted_set_val = [set_val[0] as f32, set_val[1] as f32];

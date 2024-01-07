@@ -7,10 +7,10 @@ use raycasting::*;
 mod player;
 use player::*;
 
-use HEIGHT;
+
 use WIDTH;
 
-use std::collections::HashMap;
+
 
 pub type PixelBuffer = Vec<u8>;
 
@@ -18,7 +18,7 @@ pub type Color = [u8;3];
 
 pub type RenderChunks = Vec<(f32, ([i32;2], [u32;2]))>;
 
-use std::arch::asm;
+
 
 // Set the color of a pixel in the buffer
 #[inline(always)]

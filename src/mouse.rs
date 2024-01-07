@@ -1,8 +1,8 @@
 
 use sdl2::{Sdl, video::Window, render::Canvas};
-use sdl2::mouse::{MouseButton, self};
 
-use crate::player::{self, Player};
+
+use crate::player::{Player};
 
 pub enum MouseButtonPressed {
   LEFT,

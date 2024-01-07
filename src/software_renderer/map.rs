@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::pixel_buffer::Color;
 
 
@@ -7,11 +9,11 @@ pub struct Map {
   pub map_layout: map_lay,
   pub map_width: u32,
   pub map_height: u32,
-  pub wall_format: Vec<(Color, char)>,
+  pub wall_format: HashMap<char, Color>,
 }
 
 // nothing being 0, a thing being 1, and the starting point of the player being 2
-pub fn new_map(map: map_lay, map_width: u32, map_height: u32, wall_format: Vec<(Color, char)>) -> Map {
+pub fn new_map(map: map_lay, map_width: u32, map_height: u32, wall_format: HashMap<char, Color>) -> Map {
   Map { map_layout: map, map_width: map_width, map_height: map_height, wall_format }
 }
 
@@ -24,7 +26,7 @@ spaces will always represent, well nothing
 +++
 +++++++++++
 */
-pub fn map_from_txt(defined_walls: Vec<(Color, char)>, map: &str) -> Map {
+pub fn map_from_txt(defined_walls: HashMap<char, Color>, map: &str) -> Map {
 
   let mut wall_collection: Vec<Vec<char>> = Vec::new();
 
@@ -33,13 +35,19 @@ pub fn map_from_txt(defined_walls: Vec<(Color, char)>, map: &str) -> Map {
     ' '
   ];
 
-  map.bytes().for_each(|letter| {
+  // so it doesnt read janky doube newlines, creating gaps in the map
+  let mut was_newline = false;
 
-    if letter as char == '\n' {
+  map.chars().for_each(|letter| {
+
+    if letter == '\n' && !was_newline {
+      was_newline = true;
       wall_collection.push(current_wall_sector.clone());
-      current_wall_sector = vec![];
-    } else {
-      current_wall_sector.push(letter as char);
+      current_wall_sector.clear();
+      current_wall_sector.push(' ');
+    } else if letter != '\n' {
+      was_newline = false;
+      current_wall_sector.push(letter);
     }
 
   });
@@ -56,9 +64,7 @@ pub fn map_from_txt(defined_walls: Vec<(Color, char)>, map: &str) -> Map {
 
   // builds the map from the given text formated
   
-  let map_width = wall_collection[0].len();
-  let map_height = wall_collection.len();
-
+  
   let mut map_data: Vec<u8> = vec![];
   
   wall_collection.iter_mut().for_each(|wall| {
@@ -68,9 +74,14 @@ pub fn map_from_txt(defined_walls: Vec<(Color, char)>, map: &str) -> Map {
     wall.iter().for_each(|data| {
       map_data.push(*data as u8);
     });
-
+    
     println!("{:?}", wall);
   });
+
+  let map_width = wall_collection[0].len();
+  let map_height = wall_collection.len();
+  
+  println!("map width: {}, map height: {}", map_width, map_height);
   
   return new_map(map_data, map_width as u32, map_height as u32, defined_walls);
 

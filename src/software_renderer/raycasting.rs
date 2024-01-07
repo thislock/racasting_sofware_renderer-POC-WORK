@@ -1,5 +1,5 @@
 
-use std::ops::Rem;
+
 
 use PixelBuffer;
 
@@ -28,7 +28,8 @@ pub fn cast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
   let mut raycast_pos: [f32;2] = cast_from;
 
   let add_direction: [f32;2] = subtract_f32_array(
-    &find_directional_line(&raycast_pos, angle, raycast_check_dst), &raycast_pos
+    &find_directional_line(&raycast_pos, angle, raycast_check_dst), 
+    &raycast_pos
   );
 
   let mut distance_away = 0.0;
@@ -57,47 +58,13 @@ pub fn cast_ray(map: &Map, cast_from: [f32;2], angle: f32) -> (f32, u8) {
   (distance_away, map.get_map_item_from_pos([raycast_pos[0] as i32, raycast_pos[1] as i32]))
 
 }
-// same as the prior but returns the desination where the ray ended up
-pub fn cast_ray_to_dest(map: &Map, cast_from: [f32;2], angle: f32) -> [f32;2] {
-  
-  let mut raycast_pos: [f32;2] = cast_from;
-
-  let add_direction: [f32;2] = subtract_f32_array(
-    &find_directional_line(&raycast_pos, angle, raycast_check_dst), &raycast_pos
-  );
-
-  let mut distance_away = 0.0;
-
-  // continues the calculations unlil it his a wall, or the end of the map
-  while !map.is_pos_wall(&raycast_pos) {
-    
-    distance_away += raycast_check_dst;
-
-    raycast_pos = [
-      raycast_pos[0] + add_direction[0],
-      raycast_pos[1] + add_direction[1]
-    ];
-
-    if map.is_pos_out_of_map(raycast_pos) {
-      break;
-    }
-
-  }
-
-  // turns the distance to negitive if it never hit a wall
-  if map.is_pos_out_of_map(raycast_pos) {
-    distance_away = -1.0;
-  }
-
-  [raycast_pos[0], raycast_pos[1]]
-}
 
 use WIDTH;
 use HEIGHT;
 
 use set_pixel;
 
-use RenderChunks;
+
 
 use Color;
 
@@ -142,16 +109,7 @@ fn draw_raycasted_walls(buffer: &mut PixelBuffer, distance_list: &mut Vec<(f32, 
       (i.1 * draw_sector) + draw_sector
     ];
 
-    let plus = '+' as u8;
-
-    match i.2 {
-      2 => color = [255, 255, 255],
-      3 => color = [255, 0, 0],
-
-      plus => color = [255, 255, 0],
-
-      _ => color = [0, 0, 0]
-    }
+    color = *map.wall_format.get(&(i.2 as char)).unwrap_or(&[0, 0, 0]);
 
     // does some meth to make the vertical part of the collum smaller on the screen the longer the raycast lasted
     let mut collum_vertical_size = ((SCREEN_MIDDLE as f32) / i.0).round() as u32;
